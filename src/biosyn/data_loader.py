@@ -1,4 +1,5 @@
-from lib2to3.pgen2.tokenize import tokenize
+
+m lib2to3.pgen2.tokenize import tokenize
 import re
 import os
 import glob
@@ -15,7 +16,8 @@ class QueryDataset(Dataset):
     def __init__(self, data_dir, 
                 filter_composite=False,
                 filter_duplicate=False,
-                filter_cuiless=False
+                filter_cuiless=False,
+                abbr_map=None
         ):
         """       
         Parameters
@@ -37,10 +39,11 @@ class QueryDataset(Dataset):
             data_dir=data_dir,
             filter_composite=filter_composite,
             filter_duplicate=filter_duplicate,
-            filter_cuiless=filter_cuiless
+            filter_cuiless=filter_cuiless,
+            abbr_map=abbr_map
         )
         
-    def load_data(self, data_dir, filter_composite, filter_duplicate, filter_cuiless):
+    def load_data(self, data_dir, filter_composite, filter_duplicate, filter_cuiless, abbr_map):
         """       
         Parameters
         ----------
@@ -59,6 +62,8 @@ class QueryDataset(Dataset):
         """
         data = []
 
+        replace_cnt = 0
+
         concept_files = glob.glob(os.path.join(data_dir, "*.concept"))
         for concept_file in tqdm(concept_files):
             with open(concept_file, "r", encoding='utf-8') as f:
@@ -68,6 +73,12 @@ class QueryDataset(Dataset):
                 concept = concept.split("||")
                 mention = concept[3].strip()
                 cui = concept[4].strip()
+
+                if abbr_map is not None and mention in abbr_map:
+                    # print("replace ", mention, "to", abbr_map[mention])    
+                    mention = abbr_map[mention]
+                    replace_cnt += 1
+
                 is_composite = (cui.replace("+","|").count("|") > 0)
 
                 # filter composite cui
@@ -79,6 +90,8 @@ class QueryDataset(Dataset):
 
                 data.append((mention,cui))
         
+        print("replaced:", replace_cnt)
+
         if filter_duplicate:
             data = list(dict.fromkeys(data))
         

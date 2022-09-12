@@ -80,6 +80,14 @@ def main(args):
     with open(os.path.join(os.path.dirname(args.output_dir), "args.json")) as f:
         train_args = json.load(f)
 
+    abbr_map = None
+    if "bc5cdr-chemical" in train_args["train_dir"]:
+        abbr_map = {}
+        with open("./data/bc5cdr-chemical/abbr_replace.txt") as f:
+            for line in f.readlines():
+                splited = line.strip().split("\t")
+                abbr_map[splited[0].lower()] = splited[1].lower()
+
     # load dictionary and data
     eval_dictionary = load_dictionary(dictionary_path=args.dictionary_path)
     eval_queries = load_queries(

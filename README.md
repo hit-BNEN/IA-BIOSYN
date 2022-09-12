@@ -1,4 +1,4 @@
-# Reame
+eame
 This repo is the source code for paper Biomedical named entity normalization via interaction-based synonym marginalization
 
 ## Dataset
@@ -47,7 +47,7 @@ CUDA_VISIBLE_DEVICES=$1 python -u train.py \
     --attention_score_mode="dot" 
 ```
 ## Evaluation
-We shared our pretrained model at https://drive.google.com/drive/folders/1yhnBt8M42suc5u7ZCI9yHAyao7MQF0Km?usp=sharing, and you can download our pretrained checkpoint and unzip it into './checkpoints'.
+We shared our pretrained model at https://drive.google.com/drive/folders/1yhnBt8M42suc5u7ZCI9yHAyao7MQF0Km?usp=sharing
 
 ```bash
 output_dir="./checkpoints/ncbi-disease/"
