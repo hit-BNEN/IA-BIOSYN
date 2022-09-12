@@ -176,6 +176,14 @@ def main(args):
         print(json.dumps(args.__dict__, indent=4))
         json.dump(args.__dict__, f, indent=4)
         
+    abbr_map = None
+    if "bc5cdr-chemical" in train_args["train_dir"]:
+        abbr_map = {}
+        with open("./data/bc5cdr-chemical/abbr_replace.txt") as f:
+            for line in f.readlines():
+                splited = line.strip().split("\t")
+                abbr_map[splited[0].lower()] = splited[1].lower()   
+
     # load dictionary and queries
     train_dictionary = load_dictionary(dictionary_path=args.train_dictionary_path)
     train_queries = load_queries(
